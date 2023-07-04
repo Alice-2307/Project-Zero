@@ -1,7 +1,6 @@
 
 let posts = []
 
-
 function createPost(post) {
     return new Promise( (resolve, reject) => {
         setTimeout( () => {
