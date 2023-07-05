@@ -40,7 +40,7 @@ function deletePost(){
 
 async function onlinePost(){
     await createPost({title: 'POST1', body: 'This is POST1'});
-    let time = await updateLastUserActivityTime()
+    let time = await updateLastUserActivityTime();
     showPost();
     console.log(time);
 try{
@@ -49,7 +49,7 @@ try{
     console.log(err);
 }
     await(createPost({title: 'POST2', body: 'This is POST2'}));
-    time = await updateLastUserActivityTime()
+    time = await updateLastUserActivityTime();
     showPost();
     console.log(time);
 }
