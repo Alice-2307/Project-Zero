@@ -32,7 +32,7 @@ function deletePost(){
                 resolve();
             }
             else{
-                reject("ERROR");
+                reject('ERROR');
             }
         }, 5000)
     })
@@ -40,17 +40,18 @@ function deletePost(){
 
 async function onlinePost(){
     await createPost({title: 'POST1', body: 'This is POST1'});
+    let time = await updateLastUserActivityTime()
     showPost();
-    console.log(await updateLastUserActivityTime());
+    console.log(time);
 try{
     await deletePost();
 } catch(err){
     console.log(err);
 }
     await(createPost({title: 'POST2', body: 'This is POST2'}));
+    time = await updateLastUserActivityTime()
     showPost();
-    console.log(await updateLastUserActivityTime());
-
+    console.log(time);
 }
 
 onlinePost();
