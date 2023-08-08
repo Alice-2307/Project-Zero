@@ -8,7 +8,7 @@
     "start": "nodemon demoProject1.js",
     "start-server": "node demoProject1.js"
   },
-  "author": "Aditya",
+  "author": "Aditya Sharma",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.0.1"
