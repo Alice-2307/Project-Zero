@@ -8,7 +8,6 @@ exports.getproductController  = (req, res, next) => {
     activeAddProduct: true
   });
 };
-
 exports.postproductController = (req, res, next) => {
   const p = new Product(req.body.title);
   p.save();

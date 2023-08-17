@@ -1,5 +1,3 @@
-
-
 exports.getsuccessController =  (req,res, next) => {
     res.render('success', {
         pageTitle: 'successful',

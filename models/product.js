@@ -10,5 +10,4 @@ module.exports = class ProductData{
     static fetchAll(){
         return products;
     }
-
 }

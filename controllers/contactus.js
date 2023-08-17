@@ -1,5 +1,3 @@
-
-
 exports.getcontactController = (req,res, next) => {
     res.render('contactus', {
         pageTitle: 'Contact Us',
