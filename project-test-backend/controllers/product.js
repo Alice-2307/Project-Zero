@@ -1,12 +1,12 @@
-const product = require("../models/product");
+const product = require("../models/products");
 
 exports.postProductDetail = async (req, res, next) => {
-  const SP = req.body.SellingPrice;
-  const PM = req.body.ProductName;
+  const SP = req.body.sellingPrice;
+  const PM = req.body.productName;
   try {
     let result = await product.create({
-      SellingPrice: SP,
-      ProductName: PM,
+      sellingPrice: SP,
+      name: PM,
     })
     console.log("Product Create Successfully");
     res.status(201).json({ ProductData: result });
@@ -30,10 +30,10 @@ exports.getProductDetail = async (req, res, next) => {
 };
 
 exports.deleteProductDetail = async (req, res, next) => {
-  const prodid = req.params.id;
-  console.log(prodid);
+  const prodId = req.params.id;
+  console.log(prodId);
   try {
-    let result = await product.findByPk(prodid)
+    let result = await product.findByPk(prodId)
     result.destroy()
     console.log("Delete Successfully")
   } catch (err) {

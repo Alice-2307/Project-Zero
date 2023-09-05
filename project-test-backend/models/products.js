@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-const sequelize = require("../util/database");
+const sequelize = require("../utils/database");
 
 const Product = sequelize.define("product", {
   id: {
@@ -9,11 +9,11 @@ const Product = sequelize.define("product", {
     allowNull: false,
     primaryKey: true,
   },
-  SellingPrice: {
+  sellingPrice: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
-  ProductName: {
+  name: {
     type: Sequelize.STRING,
     allowNull: false,
   },

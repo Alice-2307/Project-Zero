@@ -1,17 +1,17 @@
 let website = document.getElementById("ecommerce");
 let sellingAmount = document.getElementById("SellingPrice");
-let ProductName = document.getElementById("ProductName");
+let productName = document.getElementById("ProductName");
 
 website.addEventListener("submit", ProductDetails);
 
 async function ProductDetails(e) {
     e.preventDefault();
     let Ecommerce_Data = {
-        SellingPrice: sellingAmount.value,
-        ProductName: ProductName.value,
+        sellingPrice: sellingAmount.value,
+        productName: productName.value,
     }
     try {
-        let res = await axios.post("http://localhost:5000/addProduct", Ecommerce_Data)
+        let res = await axios.post("http://localhost:5000/products", Ecommerce_Data)
         Display(res.data.ProductData)
     } catch (err) {
         console.log(err);
@@ -22,7 +22,8 @@ window.addEventListener("DOMContentLoaded", RefreshPage)
 async function RefreshPage() {
 
     try {
-        let res = await axios.get("http://localhost:5000/getProduct")
+        let res = await axios.get("http://localhost:5000/products")
+        console.log(res);
         for (let i = 0; i < res.data.getAllProductData.length; i++) {
             Display(res.data.getAllProductData[i]);
         }
@@ -37,7 +38,7 @@ function Display(Detailval) {
     deleteBtn.type = 'button';
     deleteBtn.value = 'Delete';
 
-    subElement.innerHTML = `Selling Price: ${Detailval.SellingPrice} - Product Name: ${Detailval.ProductName}`;
+    subElement.innerText = `Selling Price: ${Detailval.sellingPrice} - Product Name: ${Detailval.name}`;
 
     deleteBtn.onclick = () => {
         Element.removeChild(subElement)
@@ -67,7 +68,7 @@ function updateTotalPrice() {
 
 async function Delete(delValue) {
     try {
-        let res = await axios.delete("http://localhost:5000/deleteProduct/" + delValue.id)
+        let res = await axios.delete("http://localhost:5000/products/" + delValue.id)
         console.log(res);
     } catch (err) {
         console.log(err);

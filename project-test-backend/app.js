@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const bodyParser = require("body-parser");
 
-const sequelize = require("./util/database");
+const sequelize = require("./utils/database");
 
 const app = express();
 
@@ -12,13 +12,15 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-const ProductData = require("./router/Productdata");
+const productData = require("./routers/product");
 
-app.use("/", ProductData);
+
+app.use("/", productData);
 
 sequelize
     .sync()
     .then((result) => {
         app.listen(5000);
+        console.log(`Start Port 5000`);
     })
     .catch((err) => console.log(err));
