@@ -12,7 +12,9 @@ form.addEventListener("submit", async (e) => {
     };
     try {
         let data = await axios.post("http://localhost:3000/user/signup",expenseData);
+        console.log(data);
     } catch (err) {
+        console.log(err);
         const error = document.getElementById("error")
         error.textContent = `Error: Network Error`
     }
