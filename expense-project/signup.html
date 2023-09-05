@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense</title>
+    <style>
+        button{
+            background-color: rgb(241, 236, 236);
+            color: black;
+            margin: 10px 0px;
+            display: block;
+            width: fit-content;
+        }
+        #expense{
+            display: flow;
+        }
+        input{
+            padding: 5px;
+            height: 10px;
+            width: 200px;
+            margin: 7px 2px;
+            border-color: darkgray
+        }
+        #login{
+            color: blue;
+            text-decoration-line: underline;
+        }
+        #error{
+            color: red;
+        }
+        
+    </style>
+</head>
+<body>
+    <form id="expense">
+        <label for="name">Enter Your Name: </label>
+        <input type="text" id="name" required>
+        <label for="email">Enter Your Email: </label>
+        <input type="email" id="email" required>   
+        <label for="password">Enter Your Password: </label>
+        <input type="password" id="password" required>
+        <button>Signup</button>
+        <div id="login">Existing User-Login</div>
+        <div id="error"></div>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script src="signup.js"></script>
+</body>
+</html>
