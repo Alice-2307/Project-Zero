@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense</title>
+    <title>login</title>
     <style>
         button {
             background-color: rgb(241, 236, 236);
@@ -25,27 +25,19 @@
             margin: 7px 2px;
             border-color: darkgray
         }
-
-        #error {
-            color: red;
-        }
     </style>
 </head>
 
 <body>
     <form id="expense">
-        <label for="name">Enter Your Name: </label>
-        <input type="text" id="name" required>
         <label for="email">Enter Your Email: </label>
         <input type="email" id="email" required>
         <label for="password">Enter Your Password: </label>
         <input type="password" id="password" required>
-        <button>Signup</button>
-        <a href="login.html"> Existing User-Login</a>
+        <button>Login</button>
+        <a href="signup.html">New User - Signup Now</a>
         <div id="error"></div>
     </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
-    <script src="signup.js"></script>
 </body>
 
 </html>
