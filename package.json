@@ -8,7 +8,7 @@
     "start": "nodemon demoProject1.js",
     "start-server": "node demoProject1.js",
     "start1": "nodemon chatApp.js",
-    "start2": "nodemon ./project-test-backend/app.js"
+    "start2": "nodemon ./before-expense/project-test-backend/app.js"
   },
   "author": "Aditya",
   "license": "ISC",

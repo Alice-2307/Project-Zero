@@ -6,7 +6,7 @@ website.addEventListener("submit", ProductDetails);
 
 async function ProductDetails(e) {
     e.preventDefault();
-    let Ecommerce_Data = {
+    const Ecommerce_Data = {
         sellingPrice: sellingAmount.value,
         productName: productName.value,
     }
