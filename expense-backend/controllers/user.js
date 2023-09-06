@@ -1,18 +1,22 @@
 const user = require("../models/user")
 
+const bcrypt = require("bcrypt");
+
 exports.postUser = async (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const pass = req.body.password;
 
     try {
-        let result = await user.create({
+        let hashPassword = await bcrypt.hash(pass, 10)
+        await user.create({
             name: name,
             email: email,
-            password: pass
+            password: hashPassword
         })
-        res.status(201).json({ userData: result });
         console.log("User Data Added")
+        res.status(201).json({ message: "User signup successfully" });
+
     } catch (err) {
         console.log(err);
         if (err.name === "SequelizeUniqueConstraintError") {
@@ -29,11 +33,12 @@ exports.loginUser = async (req, res, next) => {
     const pass = req.body.password;
 
     try {
-        let result = await user.findAll();
+        let userData = await user.findAll();
 
-        for (let i = 0; i < result.length; i++) {
-            if (email === result[i].email) {
-                if (pass === result[i].password) {
+        for (let i = 0; i < userData.length; i++) {
+            if (email === userData[i].email) {
+                let matchPassword = await bcrypt.compare(pass, userData[i].password)
+                if (matchPassword === true) {
                     return res.status(200).json({ success: true, message: "User logged in successfully" })
                 }
                 return res.status(401).json({ success: false, Error: "Password is incorrect" })
