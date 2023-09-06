@@ -36,7 +36,7 @@ exports.loginUser = async (req, res, next) => {
                 if (pass === result[i].password) {
                     return res.status(200).json({ success: true, message: "User logged in successfully" })
                 }
-                return res.status(404).json({ success: false, Error: "Password is incorrect" })
+                return res.status(401).json({ success: false, Error: "Password is incorrect" })
             }
         }
         return res.status(404).json({ Error: "Email does not exist" });
