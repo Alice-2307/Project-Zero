@@ -1,46 +1,48 @@
 const expense = require("../models/expense");
 
-exports.addExpense = async(req,res,next) => {
+
+exports.addExpense = async (req, res, next) => {
     const desc = req.body.description;
     const amount = req.body.amount;
     const category = req.body.category
 
-    try{
+    try {
         let result = await expense.create({
             description: desc,
             amount: amount,
-            category: category
+            category: category,
+            userId: req.user.id
         })
         console.log("Expense Added")
-        res.status(201).json({expenseData: result})
+        res.status(201).json({ expenseData: result })
 
-    } catch(err){
+    } catch (err) {
         console.log(errr);
-        res.status(500).json({Error: "An error occurred"})
+        res.status(500).json({ Error: "An error occurred" })
     }
 }
 
-exports.getExpense = async(req,res,next) => {
-    try{
-        let allExpesneData = await expense.findAll();
+exports.getExpense = async (req, res, next) => {
+    try {
+        const allExpenseData = await expense.findAll({ where: { userId: req.user.id } });
         console.log("Get all expense");
-        res.status(200).json({allExpense: allExpesneData})
+        res.status(200).json({ allExpense: allExpenseData })
 
-    } catch(err){
+    } catch (err) {
         console.log(errr);
-        res.status(500).json({Error: "An error occurred"})
+        res.status(500).json({ Error: "An error occurred" })
     }
 }
 
-exports.deleteExpense = async(req,res,next) => {
-    let expenseId = req.params.id;
+exports.deleteExpense = async (req, res, next) => {
+    const expenseId = req.params.id;
 
-    try{
-        let deleteVal = await expense.findByPk(expenseId);
+    try {
+        let deleteVal = await expense.findOne({ where: { id: expenseId, userId: req.user.id } });
         deleteVal.destroy();
         console.log("Delete Successfully");
-    } catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(500).json({Error: "An error occurred"})
+        res.status(500).json({ Error: "An error occurred" })
     }
 }

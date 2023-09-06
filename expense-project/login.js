@@ -13,6 +13,7 @@ form.addEventListener("submit", async (e) => {
         let result = await axios.post("http://localhost:3000/user/login", loginData);
         console.log(result);
         alert(`${result.data.message}`);
+        localStorage.setItem("token", result.data.token)
         window.location.href = "expense.html";
 
     } catch (err) {

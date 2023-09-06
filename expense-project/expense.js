@@ -10,19 +10,20 @@ const category = document.getElementById("selectItem");
 const error = document.getElementById("error");
 
 
-form.addEventListener("submit", async(e) => {
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let expense = {
         description: descData.value,
         category: category.value,
         amount: amount.value,
     };
-    try{
-        let expenseDetail = await  axios.post("http://localhost:3000/expense/addExpense", expense);
+    try {
+        const token = await localStorage.getItem("token")
+        const expenseDetail = await axios.post("http://localhost:3000/expense/addExpense", expense, { headers: { "Authorization": token } });
         console.log(expenseDetail);
         ShowValue(expenseDetail.data.expenseData)
 
-    } catch(err){
+    } catch (err) {
         console.log(err);
         if (err.response !== undefined) {
             error.textContent = `Error: ${err.response.data.Error}`;
@@ -33,13 +34,14 @@ form.addEventListener("submit", async(e) => {
 });
 
 
-window.addEventListener("DOMContentLoaded", async() => {
-    try{
-    let all = await axios.get("http://localhost:3000/expense/getExpense");
-    for(let i=0;i<all.data.allExpense.length;i++){
-        ShowValue(all.data.allExpense[i]);
-    }
-    } catch(err){
+window.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const token = await localStorage.getItem("token")
+        const all = await axios.get("http://localhost:3000/expense/getExpense", { headers: { "Authorization": token } });
+        for (let i = 0; i < all.data.allExpense.length; i++) {
+            ShowValue(all.data.allExpense[i]);
+        }
+    } catch (err) {
         console.log(err);
     }
 });
@@ -65,9 +67,10 @@ function ShowValue(expenseVal) {
 }
 
 async function Delete(v) {
-    try{
-    await axios.delete(`http://localhost:3000/expense/${v.id}`)
-    } catch(err){
+    try {
+        const token = await localStorage.getItem("token")
+        await axios.delete(`http://localhost:3000/expense/${v.id}`, { headers: { "Authorization": token } })
+    } catch (err) {
         console.log(err);
     }
 }
