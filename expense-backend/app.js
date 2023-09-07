@@ -12,6 +12,8 @@ const expense = require("./routers/expense");
 
 const purchase = require("./routers/order");
 
+const premium = require("./routers/premium");
+
 const User = require("./models/user")
 
 const Expense = require("./models/expense")
@@ -31,6 +33,8 @@ app.use("/user", user);
 app.use("/expense", expense)
 
 app.use("/purchase", purchase)
+
+app.use("/premium", premium);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);

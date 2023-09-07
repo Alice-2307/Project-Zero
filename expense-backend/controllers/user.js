@@ -42,7 +42,7 @@ exports.loginUser = async (req, res, next) => {
                 let matchPassword = await bcrypt.compare(pass, userData[i].password)
                 if (matchPassword === true) {
                     const userToken = await jwt.sign({ userId: userData[i].id }, process.env.SECRET_TOKEN)
-                    return res.status(200).json({ success: true, message: "User logged in successfully", token: userToken })
+                    return res.status(200).json({ success: true, message: "User logged in successfully", token: userToken, isPremium:userData[i].isPremium})
                 }
                 return res.status(401).json({ success: false, Error: "Password is incorrect" })
             }

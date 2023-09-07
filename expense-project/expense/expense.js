@@ -10,6 +10,14 @@ const error = document.getElementById("error");
 
 const razorPay = document.getElementById("razor-pay");
 
+const premium = document.getElementById("premium-member");
+
+const leaderBoard = document.getElementById("leader-board");
+
+const element = document.getElementById("leader-list");
+
+const lead = document.getElementById("lead");
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let expense = {
@@ -24,25 +32,67 @@ form.addEventListener("submit", async (e) => {
         ShowValue(expenseDetail.data.expenseData)
 
     } catch (err) {
-        console.log(err);
-        if (err.response !== undefined) {
-            error.textContent = `Error: ${err.response.data.Error}`;
-        } else {
-            error.textContent = `Error: ${err.message}`;
-        }
+        showError(err);
     }
 });
 
+let isLeaderboardOpen = false;
+
+leaderBoard.onclick = async () => {
+    try {
+        const token = localStorage.getItem("token")
+        if (!isLeaderboardOpen) {
+            const result = await axios.get("http://localhost:3000/premium/showleaderboard", { headers: { "Authorization": token } });
+            console.log(result);
+            if (result.data.isPremium == true) {
+                for (let i = 0; i < result.data.leaderboard.length; i++) {
+                    showLeaderboard(result.data.leaderboard[i]);
+                }
+            }
+            else {
+                for (let i = 0; i < result.data.leaderboard.length; i++) {
+                    showLeaderboard(result.data.leaderboard[i]);
+                }
+            }
+            isLeaderboardOpen = true;
+        }
+        else {
+            element.innerHTML = "";
+            isLeaderboardOpen = false;
+        }
+    } catch (err) {
+        showError(err);
+    }
+}
+
+function showLeaderboard(lead) {
+    const subElement = document.createElement("li");
+    subElement.textContent = `Name: ${lead.name} - Expense amount: ${lead.total}`;
+
+    element.appendChild(subElement);
+
+}
 
 window.addEventListener("DOMContentLoaded", async () => {
     try {
-        const token = await localStorage.getItem("token")
+        const token = localStorage.getItem("token")
         const all = await axios.get("http://localhost:3000/expense/getExpense", { headers: { "Authorization": token } });
-        for (let i = 0; i < all.data.allExpense.length; i++) {
-            ShowValue(all.data.allExpense[i]);
+        console.log(all);
+        if (all.data.isPremium == true) {
+            razorPay.style.display = "none";
+            premium.style.display = "block";
+            lead.style.display = "block";
+            for (let i = 0; i < all.data.allExpense.length; i++) {
+                ShowValue(all.data.allExpense[i]);
+            }
+        }
+        else {
+            for (let i = 0; i < all.data.allExpense.length; i++) {
+                ShowValue(all.data.allExpense[i]);
+            }
         }
     } catch (err) {
-        console.log(err);
+        showError(err);
     }
 });
 
@@ -71,7 +121,7 @@ async function Delete(v) {
         const token = await localStorage.getItem("token")
         await axios.delete(`http://localhost:3000/expense/${v.id}`, { headers: { "Authorization": token } })
     } catch (err) {
-        console.log(err);
+        showError(err);
     }
 }
 
@@ -89,6 +139,10 @@ razorPay.onclick = async (e) => {
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id
             }, { headers: { "Authorization": token } })
+            localStorage.setItem("isPremium", true);
+            razorPay.style.display = "none";
+            premium.style.display = "block";
+            lead.style.display = "block";
 
             alert("You are a premium member now");
         }
@@ -105,4 +159,13 @@ razorPay.onclick = async (e) => {
             { headers: { "Authorization": token } })
         alert("something went wrong");
     })
+}
+
+function showError(err) {
+    console.log(err);
+    if (err.response !== undefined) {
+        error.textContent = `Error: ${err.response.data.Error}`;
+    } else {
+        error.textContent = `Error: ${err.message}`;
+    }
 }

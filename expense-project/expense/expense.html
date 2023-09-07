@@ -57,9 +57,12 @@
               <button>Add Expense</button>
         </form>
          <button id="razor-pay">Buy Premium</button>
+         <div id="premium-member" style="display: none;" >You are a premium user <button id="leader-board">Show Leaderboards</button></div>
          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
           <h2>Expense Data</h2>
           <ul id="list"></ul>
+          <h1 id="lead" style="display: none;">Leaderboard</h1>
+          <ol id="leader-list"></ol>
           <div id="error"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>

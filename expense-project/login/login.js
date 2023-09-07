@@ -9,11 +9,14 @@ form.addEventListener("submit", async (e) => {
         email: email.value,
         password: password.value,
     };
+
     try {
         let result = await axios.post("http://localhost:3000/user/login", loginData);
         console.log(result);
         alert(`${result.data.message}`);
         localStorage.setItem("token", result.data.token)
+        localStorage.setItem("isPremium", result.data.isPremium);
+
         window.location.href = "../expense/expense.html";
 
     } catch (err) {

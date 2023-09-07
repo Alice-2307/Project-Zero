@@ -26,7 +26,7 @@ exports.getExpense = async (req, res, next) => {
     try {
         const allExpenseData = await expense.findAll({ where: { userId: req.user.id } });
         console.log("Get all expense");
-        res.status(200).json({ allExpense: allExpenseData })
+        res.status(200).json({ allExpense: allExpenseData, isPremium: req.user.isPremium })
 
     } catch (err) {
         console.log(err);
