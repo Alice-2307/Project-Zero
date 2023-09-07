@@ -67,6 +67,9 @@ leaderBoard.onclick = async () => {
 
 function showLeaderboard(lead) {
     const subElement = document.createElement("li");
+    if(lead.total==undefined){
+        lead.total = 0;
+    }
     subElement.textContent = `Name: ${lead.name} - Expense amount: ${lead.total}`;
 
     element.appendChild(subElement);

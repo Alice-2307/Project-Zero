@@ -1,26 +1,21 @@
 const Expense = require("../models/expense");
 const User = require("../models/user");
+const Sequelize = require("sequelize");
 
 exports.showLeaderboard = async (req, res, next) => {
     try {
-        const allExpense = await Expense.findAll();
-        const allUser = await User.findAll();
-        const totalExpense = {}
-        allExpense.forEach(element => {
-            if (totalExpense[element.userId]) {
-                totalExpense[element.userId] += element.amount;
-            }
-            else {
-                totalExpense[element.userId] = element.amount;
-            }
-        });
-        const leaderboard = [];
-        allUser.forEach(element => {
-            leaderboard.push({ name: element.name, total: totalExpense[element.id] || 0 })
+        const leaderboard = await User.findAll({
+            attributes: ['id','name',[Sequelize.fn('sum', Sequelize.col('expenses.amount')), 'total']],
+            include: [
+                {
+                    model: Expense,
+                    attributes: []
+                }
+            ],
+            group: ['user.id'],
+            order:[['total','Desc']]
 
-        })
-        leaderboard.sort((a, b) => b.total - a.total);
-        console.log(leaderboard);
+        });
         res.status(201).json({ leaderboard, isPremium: req.user.isPremium });
 
     } catch (err) {

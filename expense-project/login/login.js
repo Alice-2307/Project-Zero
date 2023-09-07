@@ -15,8 +15,6 @@ form.addEventListener("submit", async (e) => {
         console.log(result);
         alert(`${result.data.message}`);
         localStorage.setItem("token", result.data.token)
-        localStorage.setItem("isPremium", result.data.isPremium);
-
         window.location.href = "../expense/expense.html";
 
     } catch (err) {
