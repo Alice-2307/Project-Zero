@@ -41,7 +41,7 @@ exports.loginUser = async (req, res, next) => {
             if (email === userData[i].email) {
                 let matchPassword = await bcrypt.compare(pass, userData[i].password)
                 if (matchPassword === true) {
-                    const userToken = await jwt.sign({ userId: userData[i].id }, "823e029e29e2r0928382fhunf283j13j8h2f8h28fh2301h823h82h932")
+                    const userToken = await jwt.sign({ userId: userData[i].id }, process.env.SECRET_TOKEN)
                     return res.status(200).json({ success: true, message: "User logged in successfully", token: userToken })
                 }
                 return res.status(401).json({ success: false, Error: "Password is incorrect" })

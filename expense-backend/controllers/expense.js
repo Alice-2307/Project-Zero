@@ -29,7 +29,7 @@ exports.getExpense = async (req, res, next) => {
         res.status(200).json({ allExpense: allExpenseData })
 
     } catch (err) {
-        console.log(errr);
+        console.log(err);
         res.status(500).json({ Error: "An error occurred" })
     }
 }
