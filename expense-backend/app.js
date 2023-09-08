@@ -38,7 +38,7 @@ app.use("/purchase", purchase)
 
 app.use("/premium", premium);
 
-app.use("/password", forgotPassword)
+app.use("/password", forgotPassword);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);

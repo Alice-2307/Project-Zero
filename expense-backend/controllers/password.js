@@ -1,6 +1,6 @@
 const Sib = require("sib-api-v3-sdk");
 
-exports.forgetPassword = async (req, res, next) => {
+exports.forgotPassword = async (req, res, next) => {
     const email = req.body.email;
     const client = Sib.ApiClient.instance;
 
