@@ -1,30 +1,31 @@
 const expense = require("../models/expense");
 
-const user = require("../models/user");
-
+const sequelize = require("../utils/database");
 
 exports.addExpense = async (req, res, next) => {
+
     const desc = req.body.description;
     const amount = req.body.amount;
     const category = req.body.category
-
+    const t = await sequelize.transaction();
     try {
         let result = await expense.create({
             description: desc,
             amount: amount,
             category: category,
             userId: req.user.id
-        })
+        }, { transaction: t })
         let totEx = req.user.totalExpense;
         totEx += parseInt(amount);
 
+        await req.user.update({ totalExpense: totEx }, { transaction: t })
+        await t.commit();
         console.log("Expense Added")
-        req.user.update({ totalExpense: totEx})
         res.status(201).json({ expenseData: result })
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ Error: "An error occurred" })
+        await t.rollback();
+        showError(err, res);
     }
 }
 
@@ -35,24 +36,30 @@ exports.getExpense = async (req, res, next) => {
         res.status(200).json({ allExpense: allExpenseData, isPremium: req.user.isPremium })
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ Error: "An error occurred" })
+        showError(err, res);
     }
 }
 
 exports.deleteExpense = async (req, res, next) => {
     const expenseId = req.params.id;
+    const t = await sequelize.transaction();
 
     try {
         let deleteVal = await expense.findOne({ where: { id: expenseId, userId: req.user.id } });
+        await deleteVal.destroy({ transaction: t });
         let amount = deleteVal.amount;
-        deleteVal.destroy();
-        console.log("Delete Successfully");
         let totEx = req.user.totalExpense;
         totEx -= parseInt(amount);
-        req.user.update({ totalExpense: totEx })
+        await req.user.update({ totalExpense: totEx }, { transaction: t })
+        await t.commit();
+        console.log("Delete Successfully");
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ Error: "An error occurred" })
+        await t.rollback();
+        showError(err, res);
     }
+}
+
+function showError(err, res) {
+    console.log(err);
+    res.status(500).json({ Error: "An error occurred" })
 }
