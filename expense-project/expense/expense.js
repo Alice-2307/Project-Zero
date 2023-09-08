@@ -26,7 +26,7 @@ form.addEventListener("submit", async (e) => {
         amount: amount.value,
     };
     try {
-        const token = await localStorage.getItem("token")
+        const token = localStorage.getItem("token")
         const expenseDetail = await axios.post("http://localhost:3000/expense/addExpense", expense, { headers: { "Authorization": token } });
         console.log(expenseDetail);
         ShowValue(expenseDetail.data.expenseData)
@@ -35,46 +35,6 @@ form.addEventListener("submit", async (e) => {
         showError(err);
     }
 });
-
-let isLeaderboardOpen = false;
-
-leaderBoard.onclick = async () => {
-    try {
-        const token = localStorage.getItem("token")
-        if (!isLeaderboardOpen) {
-            const result = await axios.get("http://localhost:3000/premium/showleaderboard", { headers: { "Authorization": token } });
-            console.log(result);
-            if (result.data.isPremium == true) {
-                for (let i = 0; i < result.data.leaderboard.length; i++) {
-                    showLeaderboard(result.data.leaderboard[i]);
-                }
-            }
-            else {
-                for (let i = 0; i < result.data.leaderboard.length; i++) {
-                    showLeaderboard(result.data.leaderboard[i]);
-                }
-            }
-            isLeaderboardOpen = true;
-        }
-        else {
-            element.innerHTML = "";
-            isLeaderboardOpen = false;
-        }
-    } catch (err) {
-        showError(err);
-    }
-}
-
-function showLeaderboard(lead) {
-    const subElement = document.createElement("li");
-    if(lead.total==undefined){
-        lead.total = 0;
-    }
-    subElement.textContent = `Name: ${lead.name} - Expense amount: ${lead.total}`;
-
-    element.appendChild(subElement);
-
-}
 
 window.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -142,7 +102,6 @@ razorPay.onclick = async (e) => {
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id
             }, { headers: { "Authorization": token } })
-            localStorage.setItem("isPremium", true);
             razorPay.style.display = "none";
             premium.style.display = "block";
             lead.style.display = "block";
@@ -162,6 +121,41 @@ razorPay.onclick = async (e) => {
             { headers: { "Authorization": token } })
         alert("something went wrong");
     })
+}
+
+let isLeaderboardOpen = false;
+
+leaderBoard.onclick = async () => {
+    try {
+        const token = localStorage.getItem("token")
+        if (!isLeaderboardOpen) {
+            const result = await axios.get("http://localhost:3000/premium/showleaderboard", { headers: { "Authorization": token } });
+            console.log(result);
+            if (result.data.isPremium == true) {
+                for (let i = 0; i < result.data.leaderboard.length; i++) {
+                    showLeaderboard(result.data.leaderboard[i]);
+                }
+            }
+            isLeaderboardOpen = true;
+        }
+        else {
+            element.innerHTML = "";
+            isLeaderboardOpen = false;
+        }
+    } catch (err) {
+        showError(err);
+    }
+}
+
+function showLeaderboard(lead) {
+    const subElement = document.createElement("li");
+    if (lead.totalExpense === null) {
+        lead.totalExpense = 0;
+    }
+    subElement.textContent = `Name: ${lead.name} - Total Expense: ${lead.totalExpense}`;
+
+    element.appendChild(subElement);
+
 }
 
 function showError(err) {
