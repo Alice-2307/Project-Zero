@@ -22,6 +22,8 @@ const Expense = require("./models/expense")
 
 const Order = require("./models/order");
 
+const forgotPasswordRequest = require("./models/password")
+
 const app = express();
 
 env.config();
@@ -45,6 +47,10 @@ Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(forgotPasswordRequest);
+forgotPasswordRequest.belongsTo(User);
+
 
 sequelize.sync().then(result => {
     app.listen(3000);
