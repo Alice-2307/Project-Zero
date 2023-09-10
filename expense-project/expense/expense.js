@@ -26,6 +26,11 @@ const monthly = document.getElementById("monthly");
 
 const downloadExpense = document.getElementById("download-expense");
 
+const downloadOldExpense = document.getElementById("download-old-expense");
+
+
+const allFile = document.getElementById("all-file");
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let expense = {
@@ -51,7 +56,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         console.log(all);
         if (all.data.isPremium === true) {
             premiumFeatures();
-           
+
             for (let i = 0; i < all.data.allExpense.length; i++) {
                 ShowValue(all.data.allExpense[i]);
             }
@@ -162,8 +167,54 @@ function showLeaderboard(lead) {
     element.appendChild(subElement);
 
 }
+downloadExpense.onclick = async () => {
+    try {
+        const token = localStorage.getItem("token")
+        let result = await axios.get("http://localhost:3000/premium/download", { headers: { "Authorization": token } })
+        console.log(result);
+        const a = document.createElement("a");
+        a.href = result.data.fileUrl;
+        a.download = "myexpene.txt"
+        a.click()
 
-function premiumFeatures(){
+    } catch (err) {
+        showError(err);
+    }
+}
+let isDownloadOpen = false;
+downloadOldExpense.onclick = async () => {
+    try {
+        const token = localStorage.getItem("token")
+        if(!isDownloadOpen){
+        let result = await axios.get("http://localhost:3000/premium/downloadoldfiles", { headers: { "Authorization": token } })
+        console.log(result);
+
+        if (result.data.isPremium === true) {
+            for (let i = 0; i < result.data.allFile.length; i++) {
+                showAllFile(result.data.allFile[i]);
+            }
+        }
+        isDownloadOpen = true
+    } 
+    else{
+        allFile.innerHTML = "";
+        isDownloadOpen = false; 
+    }
+    } catch (err) {
+        showError(err);
+    }
+}
+function showAllFile(val){
+    const subElement = document.createElement("li");
+    const a = document.createElement("a");
+    const date = new Date(val.createdAt);
+    subElement.innerHTML = `<a href = ${val.fileUrl} style="text-decoration:none; color:black">${date.toLocaleString()} Click to download</a>`
+    a.download = "myexpene.txt"
+    allFile.appendChild(subElement);
+    a.click()
+}
+
+function premiumFeatures() {
     razorPay.style.display = "none";
     premium.style.display = "block";
     lead.style.display = "block";
@@ -171,6 +222,7 @@ function premiumFeatures(){
     weekly.style.display = "block";
     monthly.style.display = "block";
     downloadExpense.style.display = "block";
+    downloadOldExpense.style.display = "block";
 
 }
 

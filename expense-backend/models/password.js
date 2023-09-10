@@ -5,7 +5,7 @@ uuidv4();
 
 const sequelize = require("../utils/database");
 
-const forgotPasswordRequest = sequelize.define("ForgotPasswordRequest", {
+const forgotPasswordRequest = sequelize.define("forgotpasswordrequest", {
     id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,

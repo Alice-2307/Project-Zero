@@ -1,29 +1,20 @@
 const express = require("express");
-
 const cors = require("cors");
-
 const env = require("dotenv");
 
 const sequelize = require("./utils/database");
 
 const user = require("./routers/user");
-
 const expense = require("./routers/expense");
-
-const purchase = require("./routers/order");
-
+const purchase = require("./routers/purchase");
 const premium = require("./routers/premium");
-
 const forgotPassword = require("./routers/password");
 
 const User = require("./models/user")
-
 const Expense = require("./models/expense")
-
 const Order = require("./models/order");
-
 const forgotPasswordRequest = require("./models/password")
-
+const downloadFile = require("./models/file");
 const app = express();
 
 env.config();
@@ -50,6 +41,9 @@ Order.belongsTo(User);
 
 User.hasMany(forgotPasswordRequest);
 forgotPasswordRequest.belongsTo(User);
+
+User.hasMany(downloadFile);
+downloadFile.belongsTo(User);
 
 
 sequelize.sync().then(result => {
