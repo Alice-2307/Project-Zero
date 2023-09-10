@@ -18,6 +18,14 @@ const element = document.getElementById("leader-list");
 
 const lead = document.getElementById("lead");
 
+const daily = document.getElementById("daily");
+
+const weekly = document.getElementById("weekly");
+
+const monthly = document.getElementById("monthly");
+
+const downloadExpense = document.getElementById("download-expense");
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let expense = {
@@ -41,10 +49,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         const token = localStorage.getItem("token")
         const all = await axios.get("http://localhost:3000/expense/getExpense", { headers: { "Authorization": token } });
         console.log(all);
-        if (all.data.isPremium == true) {
-            razorPay.style.display = "none";
-            premium.style.display = "block";
-            lead.style.display = "block";
+        if (all.data.isPremium === true) {
+            premiumFeatures();
+           
             for (let i = 0; i < all.data.allExpense.length; i++) {
                 ShowValue(all.data.allExpense[i]);
             }
@@ -102,9 +109,7 @@ razorPay.onclick = async (e) => {
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id
             }, { headers: { "Authorization": token } })
-            razorPay.style.display = "none";
-            premium.style.display = "block";
-            lead.style.display = "block";
+            premiumFeatures();
 
             alert("You are a premium member now");
         }
@@ -131,7 +136,7 @@ leaderBoard.onclick = async () => {
         if (!isLeaderboardOpen) {
             const result = await axios.get("http://localhost:3000/premium/showleaderboard", { headers: { "Authorization": token } });
             console.log(result);
-            if (result.data.isPremium == true) {
+            if (result.data.isPremium === true) {
                 for (let i = 0; i < result.data.leaderboard.length; i++) {
                     showLeaderboard(result.data.leaderboard[i]);
                 }
@@ -155,6 +160,17 @@ function showLeaderboard(lead) {
     subElement.textContent = `Name: ${lead.name} - Total Expense: ${lead.totalExpense}`;
 
     element.appendChild(subElement);
+
+}
+
+function premiumFeatures(){
+    razorPay.style.display = "none";
+    premium.style.display = "block";
+    lead.style.display = "block";
+    daily.style.display = "block";
+    weekly.style.display = "block";
+    monthly.style.display = "block";
+    downloadExpense.style.display = "block";
 
 }
 
