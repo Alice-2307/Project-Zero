@@ -34,6 +34,16 @@ const allFile = document.getElementById("all-file");
 
 const pagination = document.getElementById("pagination");
 
+const noOfItem = document.getElementById("no-of-item")
+
+if (localStorage.getItem("noOfItem")) {
+    noOfItem.value = localStorage.getItem("noOfItem")
+}
+
+noOfItem.onchange = () => {
+    localStorage.setItem("noOfItem", noOfItem.value);
+}
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let expense = {
@@ -55,8 +65,9 @@ form.addEventListener("submit", async (e) => {
 window.addEventListener("DOMContentLoaded", async () => {
     try {
         const page = 1;
+        const item = localStorage.getItem("noOfItem")
         const token = localStorage.getItem("token")
-        const all = await axios.get(`http://localhost:3000/expense/getExpense?page=${page}`, { headers: { "Authorization": token } });
+        const all = await axios.get(`http://localhost:3000/expense/getExpense?page=${page}&item=${item}`, { headers: { "Authorization": token } });
         console.log(all);
         listElement.innerHTML = "";
         if (all.data.isPremium === true) {
@@ -122,7 +133,8 @@ function showPagination(currentPage, hasNextPage, nextPage, hasPreviousPage, pre
 async function getProducts(page) {
     try {
         const token = localStorage.getItem("token")
-        const all = await axios.get(`http://localhost:3000/expense/getExpense?page=${page}`, { headers: { "Authorization": token } });
+        const item = localStorage.getItem("noOfItem")
+        const all = await axios.get(`http://localhost:3000/expense/getExpense?page=${page}&item=${item}`, { headers: { "Authorization": token } });
         listElement.innerHTML = "";
         if (all.data.isPremium === true) {
             premiumFeatures();
