@@ -20,12 +20,6 @@ const listElement = document.getElementById("list");
 
 const lead = document.getElementById("lead");
 
-const daily = document.getElementById("daily");
-
-const weekly = document.getElementById("weekly");
-
-const monthly = document.getElementById("monthly");
-
 const downloadExpense = document.getElementById("download-expense");
 
 const downloadOldExpense = document.getElementById("download-old-expense");
@@ -302,9 +296,6 @@ function premiumFeatures() {
     razorPay.style.display = "none";
     premium.style.display = "block";
     lead.style.display = "block";
-    daily.style.display = "block";
-    weekly.style.display = "block";
-    monthly.style.display = "block";
     downloadExpense.style.display = "block";
     downloadOldExpense.style.display = "block";
 

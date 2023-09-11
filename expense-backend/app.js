@@ -1,6 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const env = require("dotenv");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 
 const sequelize = require("./utils/database");
 
@@ -17,10 +21,13 @@ const forgotPasswordRequest = require("./models/password")
 const downloadFile = require("./models/file");
 const app = express();
 
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),{flags:"a"})
+
 env.config();
 
 app.use(cors());
-
+app.use(helmet());
+app.use(morgan('combined',{stream: accessLogStream}));
 app.use(express.json());
 
 app.use("/user", user);
@@ -47,8 +54,7 @@ downloadFile.belongsTo(User);
 
 
 sequelize.sync().then(result => {
-    app.listen(3000);
-    console.log("Start Port 3000");
+    app.listen(process.env.PORT ||3000);
 }).catch(err => console.log(err));
 
 

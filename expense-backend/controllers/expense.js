@@ -41,13 +41,10 @@ exports.getExpense = async (req, res, next) => {
         });
         let lastPage;
         if(Math.ceil(count/ITEMS_PER_PAGE)==0){
-            console.log("hy");
             lastPage = 1;
         }
         else{
-            console.log("hy1");
             lastPage = Math.ceil(count/ITEMS_PER_PAGE)
-            console.log(lastPage)
         }
         console.log("Get all expense");
         res.status(200).json({
