@@ -24,7 +24,6 @@ exports.uploadtoS3 = (data, filename) =>{
                 reject(err);
             }
             else{
-                console.log("success", s3response);
                 resolve(s3response.Location)
             }
         })

@@ -28,12 +28,27 @@ exports.addExpense = async (req, res, next) => {
         showError(err, res);
     }
 }
-
+const ITEMS_PER_PAGE = 10;
 exports.getExpense = async (req, res, next) => {
     try {
-        const allExpenseData = await expense.findAll({ where: { userId: req.user.id } });
+        const page = +req.query.page || 1;
+        const count = await expense.count();
+        const allExpenseData = await expense.findAll({ 
+            where: { userId: req.user.id },
+            offset: (page-1)*ITEMS_PER_PAGE,
+            limit: ITEMS_PER_PAGE,
+        });
         console.log("Get all expense");
-        res.status(200).json({ allExpense: allExpenseData, isPremium: req.user.isPremium })
+        res.status(200).json({
+            allExpense: allExpenseData,
+            currentPage: page,
+            hasNextPage: ITEMS_PER_PAGE* page<count,
+            nextPage: page+1,
+            hasPreviousPage: page>1,
+            previousPage: page-1,
+            lastPage: Math.ceil(count/ITEMS_PER_PAGE),
+            isPremium: req.user.isPremium
+        })
 
     } catch (err) {
         showError(err, res);

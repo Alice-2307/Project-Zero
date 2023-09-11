@@ -14,7 +14,9 @@ const premium = document.getElementById("premium-member");
 
 const leaderBoard = document.getElementById("leader-board");
 
-const element = document.getElementById("leader-list");
+const leaderListElement = document.getElementById("leader-list");
+
+const listElement = document.getElementById("list");
 
 const lead = document.getElementById("lead");
 
@@ -28,8 +30,9 @@ const downloadExpense = document.getElementById("download-expense");
 
 const downloadOldExpense = document.getElementById("download-old-expense");
 
-
 const allFile = document.getElementById("all-file");
+
+const pagination = document.getElementById("pagination");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -51,29 +54,97 @@ form.addEventListener("submit", async (e) => {
 
 window.addEventListener("DOMContentLoaded", async () => {
     try {
+        const page = 1;
         const token = localStorage.getItem("token")
-        const all = await axios.get("http://localhost:3000/expense/getExpense", { headers: { "Authorization": token } });
+        const all = await axios.get(`http://localhost:3000/expense/getExpense?page=${page}`, { headers: { "Authorization": token } });
         console.log(all);
+        listElement.innerHTML = "";
         if (all.data.isPremium === true) {
             premiumFeatures();
-
             for (let i = 0; i < all.data.allExpense.length; i++) {
                 ShowValue(all.data.allExpense[i]);
             }
+            showPagination(all.data.currentPage, all.data.hasNextPage, all.data.nextPage, all.data.hasPreviousPage, all.data.previousPage, all.data.lastPage)
         }
         else {
             for (let i = 0; i < all.data.allExpense.length; i++) {
                 ShowValue(all.data.allExpense[i]);
             }
+            showPagination(all.data.currentPage, all.data.hasNextPage, all.data.nextPage, all.data.hasPreviousPage, all.data.previousPage, all.data.lastPage)
         }
     } catch (err) {
         showError(err);
     }
 });
 
+function showPagination(currentPage, hasNextPage, nextPage, hasPreviousPage, previousPage, lastPage) {
+    pagination.innerHTML = "";
+
+    if (hasPreviousPage) {
+        const btn2 = document.createElement("button");
+        btn2.innerHTML = previousPage;
+        btn2.onclick = () => {
+            getProducts(previousPage);
+        }
+        pagination.appendChild(btn2);
+        const btn1 = document.createElement("button");
+        btn1.innerHTML = `<h3>${currentPage}</h3>`;
+        btn1.onclick = () => {
+            getProducts(currentPage);
+        }
+        pagination.appendChild(btn1);
+    }
+    else {
+        const btn1 = document.createElement("button");
+        btn1.innerHTML = `<h3>${currentPage}</h3>`;
+        btn1.onclick = () => {
+            getProducts(currentPage);
+        }
+        pagination.appendChild(btn1);
+    }
+
+    if (hasNextPage) {
+        const btn3 = document.createElement("button");
+        btn3.innerHTML = nextPage;
+        btn3.onclick = () => {
+            getProducts(nextPage);
+        }
+        pagination.appendChild(btn3);
+    }
+    const btn4 = document.createElement("button");
+    btn4.innerHTML = `Last Page ${lastPage} `;
+    btn4.onclick = () => {
+        getProducts(lastPage);
+    }
+    pagination.appendChild(btn4);
+}
+
+async function getProducts(page) {
+    try {
+        const token = localStorage.getItem("token")
+        const all = await axios.get(`http://localhost:3000/expense/getExpense?page=${page}`, { headers: { "Authorization": token } });
+        listElement.innerHTML = "";
+        if (all.data.isPremium === true) {
+            premiumFeatures();
+            for (let i = 0; i < all.data.allExpense.length; i++) {
+                ShowValue(all.data.allExpense[i]);
+            }
+            showPagination(all.data.currentPage, all.data.hasNextPage, all.data.nextPage, all.data.hasPreviousPage, all.data.previousPage, all.data.lastPage);
+        }
+        else {
+            for (let i = 0; i < all.data.allExpense.length; i++) {
+                ShowValue(all.data.allExpense[i]);
+            }
+            showPagination(all.data.currentPage, all.data.hasNextPage, all.data.nextPage, all.data.hasPreviousPage, all.data.previousPage, all.data.lastPage)
+        }
+    } catch (err) {
+        showError(err);
+    }
+}
+
+
 function ShowValue(expenseVal) {
 
-    const element = document.getElementById("list");
     const subElement = document.createElement("li");
 
     subElement.textContent = `Description: ${expenseVal.description} - Expense amount: ${expenseVal.amount} - Category: ${expenseVal.category}`;
@@ -83,12 +154,12 @@ function ShowValue(expenseVal) {
     deleteBtn.value = "Delete";
 
     deleteBtn.onclick = () => {
-        element.removeChild(subElement)
+        listElement.removeChild(subElement)
         Delete(expenseVal);
     };
 
     subElement.appendChild(deleteBtn);
-    element.appendChild(subElement);
+    listElement.appendChild(subElement);
 }
 
 async function Delete(v) {
@@ -149,7 +220,7 @@ leaderBoard.onclick = async () => {
             isLeaderboardOpen = true;
         }
         else {
-            element.innerHTML = "";
+            leaderListElement.innerHTML = "";
             isLeaderboardOpen = false;
         }
     } catch (err) {
@@ -164,7 +235,7 @@ function showLeaderboard(lead) {
     }
     subElement.textContent = `Name: ${lead.name} - Total Expense: ${lead.totalExpense}`;
 
-    element.appendChild(subElement);
+    leaderListElement.appendChild(subElement);
 
 }
 downloadExpense.onclick = async () => {
@@ -172,11 +243,12 @@ downloadExpense.onclick = async () => {
         const token = localStorage.getItem("token")
         let result = await axios.get("http://localhost:3000/premium/download", { headers: { "Authorization": token } })
         console.log(result);
-        const a = document.createElement("a");
-        a.href = result.data.fileUrl;
-        a.download = "myexpene.txt"
-        a.click()
-
+        if (result.data.isPremium === true) {
+            const a = document.createElement("a");
+            a.href = result.data.fileUrl;
+            a.download = "myexpene.txt"
+            a.click()
+        }
     } catch (err) {
         showError(err);
     }
@@ -185,26 +257,26 @@ let isDownloadOpen = false;
 downloadOldExpense.onclick = async () => {
     try {
         const token = localStorage.getItem("token")
-        if(!isDownloadOpen){
-        let result = await axios.get("http://localhost:3000/premium/downloadoldfiles", { headers: { "Authorization": token } })
-        console.log(result);
+        if (!isDownloadOpen) {
+            let result = await axios.get("http://localhost:3000/premium/downloadoldfiles", { headers: { "Authorization": token } })
+            console.log(result);
 
-        if (result.data.isPremium === true) {
-            for (let i = 0; i < result.data.allFile.length; i++) {
-                showAllFile(result.data.allFile[i]);
+            if (result.data.isPremium === true) {
+                for (let i = 0; i < result.data.allFile.length; i++) {
+                    showAllFile(result.data.allFile[i]);
+                }
             }
+            isDownloadOpen = true
         }
-        isDownloadOpen = true
-    } 
-    else{
-        allFile.innerHTML = "";
-        isDownloadOpen = false; 
-    }
+        else {
+            allFile.innerHTML = "";
+            isDownloadOpen = false;
+        }
     } catch (err) {
         showError(err);
     }
 }
-function showAllFile(val){
+function showAllFile(val) {
     const subElement = document.createElement("li");
     const a = document.createElement("a");
     const date = new Date(val.createdAt);

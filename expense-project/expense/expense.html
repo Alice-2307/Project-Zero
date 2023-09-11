@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Expense</title>
     <style>
-        button{
+        .button-common{
             background-color: rgb(241, 236, 236);
             color: black;
             margin: 10px 0px;
@@ -54,18 +54,19 @@
                 <option value="Movie">Movie</option>
                 <option value="Other">Other</option>
               </select><br>
-              <button>Add Expense</button>
+              <button id="add-expense" class="button-common">Add Expense</button>
         </form>
-         <button id="razor-pay">Buy Premium</button>
-         <div id="premium-member" style="display: none;" >You are a premium user <button id="leader-board">Show Leaderboards</button></div>
+         <button id="razor-pay" class="button-common">Buy Premium</button>
+         <div id="premium-member" style="display: none;" >You are a premium user <button id="leader-board" class="button-common">Show Leaderboards</button></div>
          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
           <h2>Expense Data</h2>
           <ul id="list"></ul>
+          <div id="pagination"></div>
           <ul id="daily" style="display: none;"><h3>Daily Report</h3></ul>
           <ul id="weekly" style="display: none;"><h3>Weekly Report</h3></ul>
           <ul id="monthly" style="display: none;"><h3>Monthly Report</h3></ul>
-          <button id="download-expense" style="display: none;">Download Expense Data</button>
-          <button id="download-old-expense" style="display: none;">Download Old Expense Data</button>
+          <button id="download-expense" class="button-common" style="display: none;">Download Expense Data</button>
+          <button id="download-old-expense" class="button-common" style="display: none;">Download Old Expense Data</button>
          <ul id="all-file"></ul>
           <h1 id="lead" style="display: none;">Leaderboard</h1>
           <ol id="leader-list"></ol>
