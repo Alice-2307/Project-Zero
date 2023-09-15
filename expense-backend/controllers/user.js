@@ -35,6 +35,9 @@ exports.loginUser = async (req, res, next) => {
     const pass = req.body.password;
 
     try {
+        if (email === "" || pass === "") {
+            return res.status(400).json({ Error: "Required fields are empty" });
+        }
         let userData = await user.findAll();
 
         for (let i = 0; i < userData.length; i++) {

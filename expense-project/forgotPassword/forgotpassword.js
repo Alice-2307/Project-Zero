@@ -2,7 +2,7 @@ const form = document.getElementById("expense");
 
 const email = document.getElementById("email");
 
-const message = document.getElementById("message");
+const error = document.getElementById("error");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault()
@@ -12,15 +12,14 @@ form.addEventListener("submit", async (e) => {
     }
     try {
         let result = await axios.post("http://localhost:3000/password/forgotpassword", emailData)
-        console.log(result);
-        message.textContent = `${result.data.message}`;
+        alert(`${result.data.message}\nYou will now be redirected to the login page.`);
+        window.location.href = "../login/login.html";
 
     } catch (err) {
-        console.log(err);
         if (err.response !== undefined) {
-            message.textContent = `Error: ${err.response.data.Error}`;
+            error.textContent = `Error: ${err.response.data.Error}`;
         } else {
-            message.textContent = `Error: ${err.message}`;
+            error.textContent = `Error: ${err.message}`;
         }
     }
 

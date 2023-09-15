@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
+env.config();
 
 const sequelize = require("./utils/database");
 
@@ -23,7 +24,6 @@ const app = express();
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),{flags:"a"})
 
-env.config();
 
 app.use(cors());
 app.use(helmet());
@@ -56,5 +56,3 @@ downloadFile.belongsTo(User);
 sequelize.sync().then(result => {
     app.listen(process.env.PORT ||3000);
 }).catch(err => console.log(err));
-
-
